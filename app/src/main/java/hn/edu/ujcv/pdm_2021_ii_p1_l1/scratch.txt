@@ -1,0 +1,144 @@
+class MainClass {
+    val opcion:Int? = null;
+    val menu = MenuPrincipal()
+    fun main(args: Array<String>) {
+        do{
+            menu.mostrarMenu()
+            menu.leerOpcionMenu()
+            if(opcion==7){
+                println("Gracias por usar el programa")
+            }
+        }while(opcion!=7)
+    }
+
+
+}
+MainClass().main(arrayOf(""))
+
+class MenuPrincipal{
+    fun mostrarMenu(){
+        println("===========Menu Principal===========")
+        println("1..........Cobrar ENEE")
+        println("2..........Cobrar SANAA")
+        println("3..........Recargar TIGO")
+        println("4..........Recargar CLARO")
+        println("5..........Debitar Cuenta")
+        println("6..........Acreditar Cuenta")
+        println("7..........Salir")
+    }
+
+    fun leerOpcionMenu(){
+        var opcionMenu:Any?
+        opcionMenu = readLine().toString()
+        while(validarNumero(opcionMenu.toString())){
+            if(opcionMenu.toInt()==1){
+                val cobrosENEE = CobrosENEE()
+                println("Menu ENEE")
+                cobrosENEE.ingresarDatosENEE()
+                cobrosENEE.imprimirFactura()
+                cobrosENEE.
+                break
+            }
+            if(opcionMenu.toInt()==2){
+                println("Menu SANAA")
+                return
+            }
+        }
+    }
+
+     fun validarNumero(texto:String):Boolean{
+        try {
+            texto.toInt()
+            return true
+        }catch (e:Exception){
+            println("Solo se permiten números \n")
+            return false;
+        }
+    }
+
+}
+
+class CobrosENEE(){
+    var nombreCliente: String           = ""
+    var direccionCliente: String        = ""
+    var codigoCliente: String           = ""
+    var periodoFacturadoCliente: String = ""
+    val diasFacturados:Int              = 30
+    var consumoCliente: Any             = 0.0
+    var totalAPagarCliente: Any         = 0.0
+    val primeraTarifa:Double            = 15.2
+    val segundaTarifa:Double            = 18.6
+    var numeroFactura:Int               = 0
+
+    fun ingresarDatosENEE(){
+        println("Ingrese por favor el nombre del cliente")
+        nombreCliente = readLine().toString()
+        while(!validarTexto(nombreCliente)){
+            println("Ingrese por favor el nombre del cliente")
+            nombreCliente = readLine().toString()
+        }
+        println("Ingrese por favor la dirección del cliente")
+        direccionCliente = readLine().toString()
+        println("Ingrese por favor el código del cliente")
+        codigoCliente = readLine().toString()
+        while(codigoCliente.length != 7){
+            println("La longitud del código de cliente debe ser de 7 dígitos")
+            codigoCliente = readLine().toString()
+        }
+        while(!validarNumero(codigoCliente)){
+            codigoCliente = readLine().toString()
+        }
+        println("Ingrese el consumo del cliente en kWh")
+        consumoCliente = readLine().toString()
+        while(!validarNumero(consumoCliente.toString())){
+            println("")
+            consumoCliente = readLine().toString()
+        }
+        if(esNegativo(consumoCliente.toString().toDouble())){
+            println("El consumo no puede ser menor a 0 kWh")
+            consumoCliente = readLine().toString()
+            while(!validarNumero(consumoCliente.toString())){
+                consumoCliente = readLine().toString()
+            }
+        }
+        numeroFactura++
+    }
+
+
+    fun imprimirFactura(){
+        println("===================================")
+        println("=============FACTURA===============")
+        println(this.nombreCliente)
+        println(this.numeroFactura)
+        println(this.consumoCliente)
+        println("==============FINAL================")
+        println("=================================== \n")
+    }
+
+    fun esNegativo(numero:Double):Boolean{
+      if(numero < 0){
+          return true
+      }
+        return false
+    }
+    fun validarTexto(texto:String):Boolean{
+        var c:Char
+        for(i in 1..texto.length-1){
+            c = texto.get(i)
+            if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == ' ')) {
+                println("Este texto contiene números, sólo se permiten letras.")
+                return false;
+            }
+        }
+        return true
+    }
+    fun validarNumero(texto:String):Boolean{
+        try {
+            texto.toInt()
+            return true
+        }catch (e:Exception){
+            println("Solo se permiten números")
+            return false;
+        }
+    }
+}
