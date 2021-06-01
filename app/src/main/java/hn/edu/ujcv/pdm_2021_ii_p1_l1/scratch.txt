@@ -36,7 +36,6 @@ class MenuPrincipal{
                 println("Menu ENEE")
                 cobrosENEE.ingresarDatosENEE()
                 cobrosENEE.imprimirFactura()
-                cobrosENEE.
                 break
             }
             if(opcionMenu.toInt()==2){
