@@ -34,8 +34,7 @@ class MenuPrincipal{
             if(opcionMenu.toInt()==1){
                 val cobrosENEE = CobrosENEE()
                 println("Menu ENEE")
-                cobrosENEE.ingresarDatosENEE()
-                cobrosENEE.imprimirFactura()
+                cobrosENEE.cobroEnee()
                 break
             }
             if(opcionMenu.toInt()==2){
@@ -45,7 +44,8 @@ class MenuPrincipal{
         }
     }
 
-     fun validarNumero(texto:String):Boolean{
+
+    fun validarNumero(texto:String):Boolean{
         try {
             texto.toInt()
             return true
@@ -61,13 +61,14 @@ class CobrosENEE(){
     var nombreCliente: String           = ""
     var direccionCliente: String        = ""
     var codigoCliente: String           = ""
-    var periodoFacturadoCliente: String = ""
     val diasFacturados:Int              = 30
     var consumoCliente: Any             = 0.0
     var totalAPagarCliente: Any         = 0.0
     val primeraTarifa:Double            = 15.2
     val segundaTarifa:Double            = 18.6
     var numeroFactura:Int               = 0
+    var contador                        = 0
+    var nuevoRecibo:Boolean             = false;
 
     fun ingresarDatosENEE(){
         println("Ingrese por favor el nombre del cliente")
@@ -100,24 +101,85 @@ class CobrosENEE(){
                 consumoCliente = readLine().toString()
             }
         }
+        totalAPagarCliente = procesarConsumo(primeraTarifa,segundaTarifa,consumoCliente.toString().toDouble())
         numeroFactura++
     }
 
+    fun cobroEnee() {
+        do{
+            if(numeroFactura>0 && nuevoRecibo ==false){
+                return
+            }
+            ingresarDatosENEE()
+            imprimirFactura()
+            if(numeroFactura> 0){
+                generarOtroCobro()
+            }
+            cobroEnee()
+        }while(nuevoRecibo==true)
+    }
+
+    fun generarOtroCobro(){
+        var otroCobro: String
+        println("¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+        otroCobro = readLine().toString()
+        while(!validarTexto(otroCobro)){
+            println("¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+            otroCobro = readLine().toString()
+        }
+        while (!validarYN(otroCobro)){
+            println("dd¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+            otroCobro = readLine().toString()
+        }
+        if(otroCobro.equals("Y") || otroCobro.equals("y")){
+            cobroEnee()
+            nuevoRecibo = true
+        }
+        else if (otroCobro.equals("N") || otroCobro.equals("n")){
+            nuevoRecibo = false
+        }
+    }
+
+    fun validarYN(texto:String):Boolean{
+        if(texto.equals("Y") || texto.equals("y")){
+            return true
+        }else if(texto.equals("N") || texto.equals("n")){
+            return true
+        }
+        return false
+    }
+
+    fun procesarConsumo(tarifa1:Double, tarifa2:Double, consumo:Double):Double{
+        var consumoFinal:Double = 0.0
+        if(consumo < 50){
+            consumoFinal = consumo * tarifa1
+        }else if(consumo > 50){
+            var consumoTarifa2:Double
+            consumoTarifa2 = consumo - 50
+            consumoFinal = consumoTarifa2 * tarifa2
+            consumoFinal+= (50*tarifa1)
+        }
+        return consumoFinal
+    }
 
     fun imprimirFactura(){
-        println("===================================")
-        println("=============FACTURA===============")
-        println(this.nombreCliente)
-        println(this.numeroFactura)
-        println(this.consumoCliente)
-        println("==============FINAL================")
-        println("=================================== \n")
+        println("===========================================")
+        println("=================FACTURA===================")
+        println("Nombre del cliente: "+this.nombreCliente)
+        println("Número de factura: "+this.numeroFactura)
+        println("Código del cliente: "+this.codigoCliente)
+        println("Dirección del cliente: "+ this.direccionCliente)
+        println("Días facturados: "+this.diasFacturados)
+        println("Consumo del cliente: "+this.consumoCliente + " kWh")
+        println("Total a pagar: "+this.totalAPagarCliente + " L")
+        println("==================FINAL===================")
+        println("========================================== \n")
     }
 
     fun esNegativo(numero:Double):Boolean{
-      if(numero < 0){
-          return true
-      }
+        if(numero < 0){
+            return true
+        }
         return false
     }
     fun validarTexto(texto:String):Boolean{
