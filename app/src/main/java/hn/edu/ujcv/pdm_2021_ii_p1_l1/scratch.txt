@@ -1,3 +1,5 @@
+import java.util.Calendar;
+
 class MainClass {
     val opcion:Int? = null;
     val menu = MenuPrincipal()
@@ -38,8 +40,10 @@ class MenuPrincipal{
                 break
             }
             if(opcionMenu.toInt()==2){
+                val cobrosSANAA = CobrosSANAA()
                 println("Menu SANAA")
-                return
+                cobrosSANAA.cobroSANAA()
+                break
             }
         }
     }
@@ -64,10 +68,9 @@ class CobrosENEE(){
     val diasFacturados:Int              = 30
     var consumoCliente: Any             = 0.0
     var totalAPagarCliente: Any         = 0.0
-    val primeraTarifa:Double            = 15.2
-    val segundaTarifa:Double            = 18.6
+    val primeraTarifa:Double            = 3.3657
+    val segundaTarifa:Double            = 4.4082
     var numeroFactura:Int               = 0
-    var contador                        = 0
     var nuevoRecibo:Boolean             = false;
 
     fun ingresarDatosENEE(){
@@ -170,6 +173,149 @@ class CobrosENEE(){
         println("Código del cliente: "+this.codigoCliente)
         println("Dirección del cliente: "+ this.direccionCliente)
         println("Días facturados: "+this.diasFacturados)
+        println("Consumo del cliente: "+this.consumoCliente + " m³")
+        println("Total a pagar: "+this.totalAPagarCliente + " L")
+        println("==================FINAL===================")
+        println("========================================== \n")
+    }
+
+    fun esNegativo(numero:Double):Boolean{
+        if(numero < 0){
+            return true
+        }
+        return false
+    }
+    fun validarTexto(texto:String):Boolean{
+        var c:Char
+        for(i in 1..texto.length-1){
+            c = texto.get(i)
+            if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == ' ')) {
+                println("Este texto contiene números, sólo se permiten letras.")
+                return false;
+            }
+        }
+        return true
+    }
+    fun validarNumero(texto:String):Boolean{
+        try {
+            texto.toInt()
+            return true
+        }catch (e:Exception){
+            println("Solo se permiten números")
+            return false;
+        }
+    }
+}
+
+class CobrosSANAA(){
+    var nombreCliente: String           = ""
+    var direccionCliente: String        = ""
+    var codigoComercial: String         = ""
+    var consumoCliente:Any              = 0
+    var totalAPagarCliente: Any         = 0.0
+    val tarifa:Double                   = 3.17
+    var periodoPago:String              = ""
+    var numeroFactura:Int               = 0
+    var nuevoRecibo:Boolean             = false;
+
+    fun ingresarDatosSANAA(){
+        println("Ingrese por favor el nombre del cliente")
+        nombreCliente = readLine().toString()
+        while(!validarTexto(nombreCliente)){
+            println("Ingrese por favor el nombre del cliente")
+            nombreCliente = readLine().toString()
+        }
+        println("Ingrese por favor la dirección del cliente")
+        direccionCliente = readLine().toString()
+        println("Ingrese por favor el código comercial del cliente")
+        codigoComercial = readLine().toString()
+        while(codigoComercial.length != 10){
+            println("La longitud del código comercial debe ser de 10 dígitos")
+            codigoComercial = readLine().toString()
+        }
+        while(!validarNumero(codigoComercial)){
+            codigoComercial = readLine().toString()
+        }
+        println("Ingrese el consumo del cliente en m³")
+        consumoCliente = readLine().toString()
+        while(!validarNumero(consumoCliente.toString())){
+            println("")
+            consumoCliente = readLine().toString()
+        }
+        if(esNegativo(consumoCliente.toString().toDouble())){
+            println("El consumo no puede ser menor a 0 m³")
+            consumoCliente = readLine().toString()
+            while(!validarNumero(consumoCliente.toString())){
+                consumoCliente = readLine().toString()
+            }
+        }
+        val f: Calendar = Calendar.getInstance()
+        val mes = f[Calendar.MONTH] + 1
+        val año = f[Calendar.YEAR]
+        if(mes < 10){
+            periodoPago = año.toString() + "/0" + mes.toString()
+        }
+        if(mes >= 10){
+            periodoPago = año.toString() + "/" + mes.toString()
+        }
+
+        totalAPagarCliente = (consumoCliente.toString().toDouble() * tarifa)
+        numeroFactura++
+    }
+
+    fun cobroSANAA() {
+        do{
+            if(numeroFactura>0 && nuevoRecibo ==false){
+                return
+            }
+            ingresarDatosSANAA()
+            imprimirFactura()
+            if(numeroFactura> 0){
+                generarOtroCobro()
+            }
+            cobroSANAA()
+        }while(nuevoRecibo==true)
+    }
+
+    fun generarOtroCobro(){
+        var otroCobro: String
+        println("¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+        otroCobro = readLine().toString()
+        while(!validarTexto(otroCobro)){
+            println("¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+            otroCobro = readLine().toString()
+        }
+        while (!validarYN(otroCobro)){
+            println("dd¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+            otroCobro = readLine().toString()
+        }
+        if(otroCobro.equals("Y") || otroCobro.equals("y")){
+            cobroSANAA()
+            nuevoRecibo = true
+        }
+        else if (otroCobro.equals("N") || otroCobro.equals("n")){
+            nuevoRecibo = false
+        }
+    }
+
+    fun validarYN(texto:String):Boolean{
+        if(texto.equals("Y") || texto.equals("y")){
+            return true
+        }else if(texto.equals("N") || texto.equals("n")){
+            return true
+        }
+        return false
+    }
+
+
+    fun imprimirFactura(){
+        println("===========================================")
+        println("=================FACTURA===================")
+        println("Nombre del cliente: "+this.nombreCliente)
+        println("Número de factura: "+this.numeroFactura)
+        println("Código del cliente: "+this.codigoComercial)
+        println("Dirección del cliente: "+ this.direccionCliente)
+        println("Período: "+this.periodoPago)
         println("Consumo del cliente: "+this.consumoCliente + " kWh")
         println("Total a pagar: "+this.totalAPagarCliente + " L")
         println("==================FINAL===================")
