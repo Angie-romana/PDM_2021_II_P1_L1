@@ -1,0 +1,676 @@
+import java.util.regex.Pattern
+import java.util.Calendar;
+
+
+////PRINCIAL///
+class MainClass {
+    val opcion:Int? = null;
+    val menu = MenuPrincipal()
+    fun main(args: Array<String>) {
+        do{
+            menu.mostrarMenu()
+            menu.leerOpcionMenu()
+            if(opcion==7){
+                println("Gracias por usar el programa")
+            }
+        }while(opcion!=7)
+    }
+
+
+}
+MainClass().main(arrayOf(""))
+
+class MenuPrincipal{
+    fun mostrarMenu(){
+        println("===========Menu Principal===========")
+        println("1..........Cobrar ENEE")
+        println("2..........Cobrar SANAA")
+        println("3..........Recargar TIGO")
+        println("4..........Recargar CLARO")
+        println("5..........Debitar Cuenta")
+        println("6..........Acreditar Cuenta")
+        println("7..........Salir")
+    }
+
+    fun leerOpcionMenu(){
+        var opcionMenu:Any?
+        opcionMenu = readLine().toString()
+        while(validarNumero(opcionMenu.toString())){
+            if(opcionMenu.toInt()==1){
+                val cobrosENEE = CobrosENEE()
+                println("Menu ENEE")
+                cobrosENEE.ingresarDatosENEE()
+                cobrosENEE.imprimirFactura()
+                break
+            }
+            if(opcionMenu.toInt()==2){
+                println("Menu SANAA")
+                return
+            }
+           if(opcionMenu.toInt()==5){
+               var  debitar = DebitarCuenta()
+               debitar.ingresarCuenta()
+               break
+
+           }
+        }
+    }
+
+    fun validarNumero(texto:String):Boolean{
+        try {
+            texto.toInt()
+            return true
+        }catch (e:Exception){
+            println("Solo se permiten números \n")
+            return false;
+        }
+    }
+
+}
+
+
+
+
+
+/////////////////  PARTE DE ANGIE ///////////////////////
+/*
+class AcreditarCuenta():DebitarCuenta(){
+
+ fun agregarCuenta(){
+     println("Ingrese El número de cuenta orígen, para acreditar")
+     cuentaOrigen= readLine().toString()
+
+     while(cuentaOrigen.length != 10){
+         println("# Incorrecto # Ingrese tienen que ser 10 digitos")
+         cuentaOrigen= readLine().toString()
+     }
+
+     do{
+         if(contador2 > 1){
+             saldoActual= totalSaldo
+             println("###SALDOOO ACTUAL### $saldoActual")
+         }
+
+         println("Ingrese el Monto a Acreditar")
+         monto = readLine().toString().toInt()
+
+         while(validacionMaxima(monto.toString().toInt())) {
+             monto = readLine().toString().toInt()
+
+         }
+
+
+
+         while (menorZero(monto.toString().toInt())) {
+             println("El monto que desea ingresar es equivocado, deberá ser mayor a 0")
+             monto = readLine().toString().toInt()
+             while (validacionMaxima(monto.toString().toInt())) {
+                 monto = readLine().toString().toInt()
+             }
+         }
+
+
+         */
+/*validacionSaldoActual(monto.toString().toDouble())*//*
+
+         while ( saldoActual < (monto as Int)){
+             println("El monto que ingresó es mayor al del saldo actual : $saldoActual")
+
+             println("-Monto incorrecto- Ingrese de nuevo el monto")
+             monto = readLine().toString().toInt()
+
+             if(monto as Int >5000){
+                 println("El monto excede el límite de débito de 5000, Ingresar el monto")
+             }
+
+             while (menorZero(monto.toString().toInt())) {
+                 println("El monto que desea ingresar es equivocado, deberá ser mayor a 0")
+                 monto = readLine().toString().toInt()
+                 while (validacionMaxima(monto.toString().toInt())) {
+                     monto = readLine().toString().toDouble()
+                 }
+             }
+
+
+             if(saldoActual>= monto as Int){
+                 totalSaldo= saldoActual-monto as Int
+                 println("Su monto actual es de $totalSaldo")
+             }
+
+
+         }
+         totalSaldo= saldoActual-monto as Int
+         println("*********************************************************")
+         println("**********Su monto actual es de $totalSaldo **********")
+         println("*********************************************************")
+         println("¿Desea continuar debitando?")
+         println("Poner '1' si desea seguir ")
+         println("Poner '0' quiere terminar el proceso")
+         contador = readLine().toString().toInt()
+
+
+         while(contador as Int >2){
+             println("La opción que ingresó es equivocada, vuelva a ingresar una opción")
+             println("*********************************************************")
+             println("¿Desea continuar debitando?")
+             println("Poner '1' si desea seguir ")
+             println("Poner '0' quiere terminar el proceso")
+             contador = readLine().toString().toInt()
+
+
+
+         }
+         if (contador == 1){
+             contador2++
+         }else{
+             if(contador == 0){
+                 contador2 = 1}else{
+                 while(!validarNumero(contador as String)){
+                     println("SOLO ACEPTA NUMEROS")
+                     contador = readLine().toString()
+                 }
+
+             }
+
+         }
+
+
+
+     }while(contador==1)
+
+
+
+
+
+ }
+
+
+}
+
+*/
+
+
+
+
+open class DebitarCuenta():CobrosENEE(){
+    var cuentaOrigen: String = ""
+    var monto :Any = 0
+    val montoMaximo:Int = 5000
+    val montoMinimo:Int=0
+    var totalSaldo:Double = 0.0
+    var contador:Any = 1
+    var saldoActual:Double = 10000.0
+    var contador2:Int =1
+
+
+
+
+
+    fun ingresarCuenta(){
+
+
+        println("Ingrese El número de cuenta origen")
+        cuentaOrigen= readLine().toString()
+
+        while(cuentaOrigen.length != 10){
+            println("Incorrecto Ingrese tienen que ser 10 digitos")
+            cuentaOrigen= readLine().toString()
+        }
+
+        do{
+            if(contador2 > 1){
+                saldoActual= totalSaldo
+                println("###SALDOOO ACTUAL### $saldoActual")
+            }
+
+        println("Ingrese el Monto a Debitar")
+            monto = readLine().toString().toInt()
+     /*      while(!validarNumero(monto as String)) {
+               println(" ")
+               monto = readLine().toString()
+
+           }*/
+
+           /*try{
+
+                monto = readLine().toString().toInt()
+            }catch (e:Exception) {
+                var a = e.toString().contains(other = "java.lang.NumberFormatException")
+                println("############  ERROR NO SE ACEPTAN LETRAS, VOLVER A INGRESAR A LA TRANSACCION  ############")
+
+                break
+            }
+*/
+
+/*            while(!validarNumero(monto)){
+                println("Ingresar")
+                monto = readLine().toString().toDouble()
+            }*/
+
+
+
+
+
+
+       while(validacionMaxima(monto.toString().toInt())) {
+           monto = readLine().toString().toInt()
+
+       }
+
+
+
+        while (menorZero(monto.toString().toInt())) {
+            println("El monto que desea ingresar es equivocado, deberá ser mayor a 0")
+            monto = readLine().toString().toInt()
+            while (validacionMaxima(monto.toString().toInt())) {
+                monto = readLine().toString().toInt()
+            }
+        }
+
+
+        /*validacionSaldoActual(monto.toString().toDouble())*/
+       while ( saldoActual < (monto as Int)){
+           println("El monto que ingresó es mayor al del saldo actual : $saldoActual")
+
+           println("-Monto incorrecto- Ingrese de nuevo el monto")
+           monto = readLine().toString().toInt()
+
+           if(monto as Int >5000){
+               println("El monto excede el límite de débito de 5000, Ingresar el monto")
+           }
+
+           while (menorZero(monto.toString().toInt())) {
+               println("El monto que desea ingresar es equivocado, deberá ser mayor a 0")
+               monto = readLine().toString().toInt()
+               while (validacionMaxima(monto.toString().toInt())) {
+                   monto = readLine().toString().toDouble()
+               }
+           }
+
+
+           if(saldoActual>= monto as Int){
+               totalSaldo= saldoActual-monto as Int
+               println("Su monto actual es de $totalSaldo")
+           }
+
+
+       }
+            totalSaldo= saldoActual-monto as Int
+            println("*********************************************************")
+            println("**********Su monto actual es de $totalSaldo **********")
+            println("*********************************************************")
+            println("¿Desea continuar debitando?")
+            println("Poner '1' si desea seguir ")
+            println("Poner '0' quiere terminar el proceso")
+            contador = readLine().toString().toInt()
+
+
+            while(contador as Int > 2){
+                println("La opción que ingresó es equivocada, vuelva a ingresar una opción")
+                println("*********************************************************")
+                println("¿Desea continuar debitando?")
+                println("Poner '1' si desea seguir ")
+                println("Poner '0' quiere terminar el proceso")
+                contador = readLine().toString().toInt()
+
+
+
+            }
+            if (contador == 1){
+                contador2++
+            }else{
+                if(contador == 0){
+                contador2 = 1}else{
+                    while(!validarNumero(contador as String)){
+                        println("SOLO ACEPTA NUMEROS")
+                        contador = readLine().toString().toInt()
+                    }
+
+                }
+
+            }
+
+
+
+        }while(contador==1)
+
+
+
+
+    }
+   /*fun validarNumero(texto:Any):Boolean {
+       try {
+           monto.toDouble()
+       } catch (e: Exception) {
+           //var a = e.toString().contains(other = "java.lang.NumberFormatException")
+           println("############  ERROR NO SE ACEPTAN LETRAS, VOLVER A INGRESAR A LA TRANSACCION  ############")
+
+          return false
+
+       }
+return true
+   }*/
+
+    fun soloNumero(contador:Int){
+       var letras= contador.toString()
+       var letras2 = letras.contains(other = "A")
+        println(letras2)
+
+    }
+    fun menorZero(monto:Int):Boolean{
+        if(monto <= 0){
+
+            return true
+        }
+        return false
+    }
+
+
+
+  fun validacionMaxima(monto:Int):Boolean{
+
+      if(monto > 5000){
+          println("El monto que quiere debitar supera el límite de Lps.5,000")
+          return true
+      }
+      return false
+  }
+
+}
+
+
+
+
+
+
+
+/////////// PARTE CHAMORRO /////////////////
+
+open class CobrosENEE(){
+    var nombreCliente: String           = ""
+    var direccionCliente: String        = ""
+    var codigoCliente: String           = ""
+    val diasFacturados:Int              = 30
+    var consumoCliente: Any             = 0.0
+    var totalAPagarCliente: Any         = 0.0
+    val primeraTarifa:Double            = 3.3657
+    val segundaTarifa:Double            = 4.4082
+    var numeroFactura:Int               = 0
+    var nuevoRecibo:Boolean             = false;
+
+    fun ingresarDatosENEE(){
+        println("Ingrese por favor el nombre del cliente")
+        nombreCliente = readLine().toString()
+        while(!validarTexto(nombreCliente)){
+            println("Ingrese por favor el nombre del cliente")
+            nombreCliente = readLine().toString()
+        }
+        println("Ingrese por favor la dirección del cliente")
+        direccionCliente = readLine().toString()
+        println("Ingrese por favor el código del cliente")
+        codigoCliente = readLine().toString()
+        while(codigoCliente.length != 7){
+            println("La longitud del código de cliente debe ser de 7 dígitos")
+            codigoCliente = readLine().toString()
+        }
+        while(!validarNumero(codigoCliente)){
+            codigoCliente = readLine().toString()
+        }
+        println("Ingrese el consumo del cliente en kWh")
+        consumoCliente = readLine().toString()
+        while(!validarNumero(consumoCliente.toString())){
+            println("")
+            consumoCliente = readLine().toString()
+        }
+        if(esNegativo(consumoCliente.toString().toDouble())){
+            println("El consumo no puede ser menor a 0 kWh")
+            consumoCliente = readLine().toString()
+            while(!validarNumero(consumoCliente.toString())){
+                consumoCliente = readLine().toString()
+            }
+        }
+        totalAPagarCliente = procesarConsumo(primeraTarifa,segundaTarifa,consumoCliente.toString().toDouble())
+        numeroFactura++
+    }
+
+    fun cobroEnee() {
+        do{
+            if(numeroFactura>0 && nuevoRecibo ==false){
+                return
+            }
+            ingresarDatosENEE()
+            imprimirFactura()
+            if(numeroFactura> 0){
+                generarOtroCobro()
+            }
+            cobroEnee()
+        }while(nuevoRecibo==true)
+    }
+
+    fun generarOtroCobro(){
+        var otroCobro: String
+        println("¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+        otroCobro = readLine().toString()
+        while(!validarTexto(otroCobro)){
+            println("¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+            otroCobro = readLine().toString()
+        }
+        while (!validarYN(otroCobro)){
+            println("dd¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+            otroCobro = readLine().toString()
+        }
+        if(otroCobro.equals("Y") || otroCobro.equals("y")){
+            cobroEnee()
+            nuevoRecibo = true
+        }
+        else if (otroCobro.equals("N") || otroCobro.equals("n")){
+            nuevoRecibo = false
+        }
+    }
+
+    fun validarYN(texto:String):Boolean{
+        if(texto.equals("Y") || texto.equals("y")){
+            return true
+        }else if(texto.equals("N") || texto.equals("n")){
+            return true
+        }
+        return false
+    }
+
+    fun procesarConsumo(tarifa1:Double, tarifa2:Double, consumo:Double):Double{
+        var consumoFinal:Double = 0.0
+        if(consumo < 50){
+            consumoFinal = consumo * tarifa1
+        }else if(consumo > 50){
+            var consumoTarifa2:Double
+            consumoTarifa2 = consumo - 50
+            consumoFinal = consumoTarifa2 * tarifa2
+            consumoFinal+= (50*tarifa1)
+        }
+        return consumoFinal
+    }
+
+    fun imprimirFactura(){
+        println("===========================================")
+        println("=================FACTURA===================")
+        println("Nombre del cliente: "+this.nombreCliente)
+        println("Número de factura: "+this.numeroFactura)
+        println("Código del cliente: "+this.codigoCliente)
+        println("Dirección del cliente: "+ this.direccionCliente)
+        println("Días facturados: "+this.diasFacturados)
+        println("Consumo del cliente: "+this.consumoCliente + " m³")
+        println("Total a pagar: "+this.totalAPagarCliente + " L")
+        println("==================FINAL===================")
+        println("========================================== \n")
+    }
+
+    fun esNegativo(numero:Double):Boolean{
+        if(numero < 0){
+            return true
+        }
+        return false
+    }
+    fun validarTexto(texto:String):Boolean{
+        var c:Char
+        for(i in 1..texto.length-1){
+            c = texto.get(i)
+            if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == ' ')) {
+                println("Este texto contiene números, sólo se permiten letras.")
+                return false;
+            }
+        }
+        return true
+    }
+    fun validarNumero(texto:String):Boolean{
+        try {
+            texto.toInt()
+            return true
+        }catch (e:Exception){
+            println("Solo se permiten números")
+            return false;
+        }
+    }
+}
+
+class CobrosSANAA(){
+    var nombreCliente: String           = ""
+    var direccionCliente: String        = ""
+    var codigoComercial: String         = ""
+    var consumoCliente:Any              = 0
+    var totalAPagarCliente: Any         = 0.0
+    val tarifa:Double                   = 3.17
+    var periodoPago:String              = ""
+    var numeroFactura:Int               = 0
+    var nuevoRecibo:Boolean             = false;
+
+    fun ingresarDatosSANAA(){
+        println("Ingrese por favor el nombre del cliente")
+        nombreCliente = readLine().toString()
+        while(!validarTexto(nombreCliente)){
+            println("Ingrese por favor el nombre del cliente")
+            nombreCliente = readLine().toString()
+        }
+        println("Ingrese por favor la dirección del cliente")
+        direccionCliente = readLine().toString()
+        println("Ingrese por favor el código comercial del cliente")
+        codigoComercial = readLine().toString()
+        while(codigoComercial.length != 10){
+            println("La longitud del código comercial debe ser de 10 dígitos")
+            codigoComercial = readLine().toString()
+        }
+        while(!validarNumero(codigoComercial)){
+            codigoComercial = readLine().toString()
+        }
+        println("Ingrese el consumo del cliente en m³")
+        consumoCliente = readLine().toString()
+        while(!validarNumero(consumoCliente.toString())){
+            println("")
+            consumoCliente = readLine().toString()
+        }
+        if(esNegativo(consumoCliente.toString().toDouble())){
+            println("El consumo no puede ser menor a 0 m³")
+            consumoCliente = readLine().toString()
+            while(!validarNumero(consumoCliente.toString())){
+                consumoCliente = readLine().toString()
+            }
+        }
+        val f: Calendar = Calendar.getInstance()
+        val mes = f[Calendar.MONTH] + 1
+        val año = f[Calendar.YEAR]
+        if(mes < 10){
+            periodoPago = año.toString() + "/0" + mes.toString()
+        }
+        if(mes >= 10){
+            periodoPago = año.toString() + "/" + mes.toString()
+        }
+
+        totalAPagarCliente = (consumoCliente.toString().toDouble() * tarifa)
+        numeroFactura++
+    }
+
+    fun cobroSANAA() {
+        do{
+            if(numeroFactura>0 && nuevoRecibo ==false){
+                return
+            }
+            ingresarDatosSANAA()
+            imprimirFactura()
+            if(numeroFactura> 0){
+                generarOtroCobro()
+            }
+            cobroSANAA()
+        }while(nuevoRecibo==true)
+    }
+
+    fun generarOtroCobro(){
+        var otroCobro: String
+        println("¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+        otroCobro = readLine().toString()
+        while(!validarTexto(otroCobro)){
+            println("¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+            otroCobro = readLine().toString()
+        }
+        while (!validarYN(otroCobro)){
+            println("dd¿Desea generar otro cobro? Conteste con una Y para si o una N para no.")
+            otroCobro = readLine().toString()
+        }
+        if(otroCobro.equals("Y") || otroCobro.equals("y")){
+            cobroSANAA()
+            nuevoRecibo = true
+        }
+        else if (otroCobro.equals("N") || otroCobro.equals("n")){
+            nuevoRecibo = false
+        }
+    }
+
+    fun validarYN(texto:String):Boolean{
+        if(texto.equals("Y") || texto.equals("y")){
+            return true
+        }else if(texto.equals("N") || texto.equals("n")){
+            return true
+        }
+        return false
+    }
+
+
+    fun imprimirFactura(){
+        println("===========================================")
+        println("=================FACTURA===================")
+        println("Nombre del cliente: "+this.nombreCliente)
+        println("Número de factura: "+this.numeroFactura)
+        println("Código del cliente: "+this.codigoComercial)
+        println("Dirección del cliente: "+ this.direccionCliente)
+        println("Período: "+this.periodoPago)
+        println("Consumo del cliente: "+this.consumoCliente + " kWh")
+        println("Total a pagar: "+this.totalAPagarCliente + " L")
+        println("==================FINAL===================")
+        println("========================================== \n")
+    }
+
+    fun esNegativo(numero:Double):Boolean{
+        if(numero < 0){
+            return true
+        }
+        return false
+    }
+    fun validarTexto(texto:String):Boolean{
+        var c:Char
+        for(i in 1..texto.length-1){
+            c = texto.get(i)
+            if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == ' ')) {
+                println("Este texto contiene números, sólo se permiten letras.")
+                return false;
+            }
+        }
+        return true
+    }
+    fun validarNumero(texto:String):Boolean{
+        try {
+            texto.toInt()
+            return true
+        }catch (e:Exception){
+            println("Solo se permiten números")
+            return false;
+        }
+    }
+}

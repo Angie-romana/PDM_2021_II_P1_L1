@@ -15,6 +15,12 @@ class MenuPrincipal {
             if(opcion==3){
                 println("Gracias por usar el programa")
             }
+            if(opcion==4){
+
+            }
+            when(opcion){
+
+            }
         }while(opcion!=3)
     }
 }
