@@ -49,13 +49,13 @@ class MenuPrincipal{
             if(opcionMenu.toInt()==3){
                 val recargasTigo = RecargasTigo()
                 println("Recargas Tigo")
-                recargasTigo.recargarTigo()
+                recargasTigo.menuPrincipalTigo()
                 break
             }
             if(opcionMenu.toInt()==4){
                 val recargasClaro = RecargasClaro()
                 println("Recargas Claro")
-                recargasClaro.recargarClaro()
+                recargasClaro.menuPrincipalClaro()
                 break
             }
             if(opcionMenu.toInt()==5){
@@ -404,7 +404,7 @@ class AcreditarCuenta():DebitarCuenta(){
             while (menorZero(monto.toString().toDouble())) {
                 println("El monto que desea ingresar es equivocado, deberá ser mayor a 0")
                 monto = readLine().toString().toDouble()
-                while (validacionMaxima(monto.toString().toDouble())) {
+                while (validacionMaxima2(monto.toString().toDouble())) {
                     monto = readLine().toString().toDouble()
                 }
             }
@@ -627,18 +627,34 @@ open class DebitarCuenta(){
         }
         return false
     }
-
 }
 
 class RecargasTigo {
 
-    fun ingresoNumero() {
-        println("Ingrese su numero de celular")
-        var numeroCelular: Any?
-        numeroCelular = readLine().toString()
+    fun validarClaro(texto: String):Boolean {
+        if (texto.length == 8) {
+            var pattern = Pattern.compile("9")
+            var matcher = pattern.matcher(texto.substring(0, 1))
+            if(matcher.matches()){
+                return true
+            }
+            println("Los números de Tigo solo pueden comenzar con 9")
+            return false
+        }
+        println("El número debe ser de 8 dígitos")
+        return false
     }
 
-    fun Montos() {
+    fun ingresoNumero() {
+        println("Ingrese su numero de celular")
+        var numeroCelular: Any
+        numeroCelular = readLine().toString()
+        while(!validarClaro(numeroCelular.toString())){
+            numeroCelular = readLine().toString()
+        }
+    }
+
+    fun montosRecargas() {
         println("Montos de Recarga")
         println("1.LPS.15")
         println("2.LPS.25")
@@ -647,16 +663,75 @@ class RecargasTigo {
         println("5.LPS.150")
         println("6.LPS.250")
         println("Seleccione una opcion")
-
     }
 
      fun recargarTigo(){
-        ingresoNumero()
-        Montos()
-        leerOpcionMenu()
+         ingresoNumero()
+        montosRecargas()
+        leerOpcionMenuRecarga()
     }
 
-    fun leerOpcionMenu() {
+    fun superRecargarTigo(){
+        ingresoNumero()
+        mostrarMenuSuperRecarga()
+        leerOpcionMenuRecarga()
+    }
+
+    fun menuPrincipalTigo(){
+        mostrarMenuPrincipalTigo()
+        leerOpcionMenuPrincipal()
+    }
+
+    fun mostrarMenuSuperRecarga(){
+        println("Montos de Super Recarga")
+        println("1.LPS.25")
+        println("2.LPS.50")
+        println("3.LPS.100")
+        println("Seleccione una opcion")
+    }
+
+    fun mostrarMenuPrincipalTigo(){
+        println("Montos de Recarga")
+        println("1.Recarga normal")
+        println("2.Super recarga")
+        println("Seleccione una opcion")
+    }
+
+    fun leerOpcionMenuPrincipal() {
+        var opcionMenu: Any?
+        opcionMenu = readLine().toString()
+        while (validarNumero(opcionMenu.toString())) {
+            if (opcionMenu.toString().toInt() == 1) {
+                recargarTigo()
+                break
+            }
+            if (opcionMenu.toString().toInt() == 2) {
+                superRecargarTigo()
+                break
+            }
+        }
+    }
+
+    fun leerOpcionMenuSuperRecarga() {
+        var opcionMenu: Any?
+        opcionMenu = readLine().toString()
+        while (validarNumero(opcionMenu.toString())) {
+            if (opcionMenu.toString().toInt() == 1) {
+                val recargas = RecargasTigo()
+                println("1.LPS.25, Super Recarga realizada con exito ")
+                break
+            }
+            if (opcionMenu.toString().toInt() == 2) {
+                println("2.LPS.50, Super Recarga realizada con exito ")
+                break
+            }
+            if (opcionMenu.toString().toInt() == 3) {
+                println("3.LPS.100, Super Recarga realizada con exito ")
+                break
+            }
+        }
+    }
+    fun leerOpcionMenuRecarga() {
         var opcionMenu: Any?
         opcionMenu = readLine().toString()
         while (validarNumero(opcionMenu.toString())) {
@@ -702,19 +777,77 @@ class RecargasTigo {
 
 class RecargasClaro {
 
+    fun validarClaro(texto: String):Boolean {
+        if (texto.length == 8) {
+            var pattern = Pattern.compile("38")
+            var matcher = pattern.matcher(texto.substring(0, 1))
+            if(matcher.matches()){
+                return true
+            }
+            println("Los números de Claro solo pueden comenzar con 3 o con 8")
+            return false
+        }
+        println("El número debe ser de 8 dígitos")
+        return false
+    }
+
     fun ingresoNumero() {
         println("Ingrese su numero de celular")
-        var numeroCelular: Any?
+        var numeroCelular: Any
         numeroCelular = readLine().toString()
+        while(!validarClaro(numeroCelular.toString())){
+            numeroCelular = readLine().toString()
+        }
     }
 
     fun recargarClaro(){
         ingresoNumero()
-        Montos()
-        leerOpcionMenu()
+        montosRecargas()
+        leerOpcionMenuRecarga()
     }
 
-    fun Montos() {
+    fun superRecargarClaro(){
+        ingresoNumero()
+        mostrarMenuSuperRecarga()
+        leerOpcionMenuRecarga()
+    }
+
+    fun menuPrincipalClaro(){
+        mostrarMenuPrincipalTigo()
+        leerOpcionMenuPrincipal()
+    }
+
+    fun mostrarMenuSuperRecarga(){
+        println("Montos de Super Recarga")
+        println("1.LPS.25")
+        println("2.LPS.50")
+        println("3.LPS.100")
+        println("Seleccione una opcion")
+    }
+
+    fun mostrarMenuPrincipalTigo(){
+        println("Montos de Recarga")
+        println("1.Recarga normal")
+        println("2.Super recarga")
+        println("Seleccione una opcion")
+    }
+
+    fun leerOpcionMenuPrincipal() {
+        var opcionMenu: Any?
+        opcionMenu = readLine().toString()
+        while (validarNumero(opcionMenu.toString())) {
+            if (opcionMenu.toString().toInt() == 1) {
+                recargarClaro()
+                break
+            }
+            if (opcionMenu.toString().toInt() == 2) {
+                superRecargarClaro()
+                break
+            }
+        }
+    }
+
+    fun montosRecargas() {
         println("Montos de Recarga")
         println("1.LPS.15")
         println("2.LPS.25")
@@ -726,7 +859,27 @@ class RecargasClaro {
 
     }
 
-    fun leerOpcionMenu() {
+    fun leerOpcionMenuSuperRecarga() {
+        var opcionMenu: Any?
+        opcionMenu = readLine().toString()
+        while (validarNumero(opcionMenu.toString())) {
+            if (opcionMenu.toString().toInt() == 1) {
+                val recargas = RecargasTigo()
+                println("1.LPS.25, Super Recarga realizada con exito ")
+                break
+            }
+            if (opcionMenu.toString().toInt() == 2) {
+                println("2.LPS.50, Super Recarga realizada con exito ")
+                break
+            }
+            if (opcionMenu.toString().toInt() == 3) {
+                println("3.LPS.100, Super Recarga realizada con exito ")
+                break
+            }
+        }
+    }
+
+    fun leerOpcionMenuRecarga() {
         var opcion: Any?
         opcion = readLine().toString()
         while (validarNumero(opcion.toString())) {
